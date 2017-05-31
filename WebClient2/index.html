@@ -7,52 +7,52 @@
 	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
 </head>
 <body>
+<div class="container-fluid">
+	<h1>SF API Demo</h1>
 
-<h1>SF API Demo</h1>
+	<form style="width: 50%" class="form-horizontal">
 
-<form style="width: 50%" class="form-horizontal">
-
-	<div class="form-group">
-		<label class="col-sm-2 control-label">url</label>
-		<div class="col-sm-10">
-			<input value="http://localhost:8080/" class="form-control" type="text" id="txtUrl"/>
-			<p class="help-block">must have trailing slash "http://localhost:8080/" and not "http://localhost:8080"</p>
+		<div class="form-group">
+			<label class="col-sm-2 control-label">url</label>
+			<div class="col-sm-10">
+				<input value="http://localhost:8080/" class="form-control" type="text" id="txtUrl"/>
+				<p class="help-block">must have trailing slash "http://localhost:8080/" and not "http://localhost:8080"</p>
+			</div>
 		</div>
-	</div>
-	<div class="form-group">
-		<label class="col-sm-2 control-label">service url</label>
-		<div class="col-sm-10">
-			<input value="api/default/albums" class="form-control" type="text" id="txtServiceUrl"/>
-			<p class="help-block">must not have slash before "api/default/albums" and not "/api/default/albums"</p>
+		<div class="form-group">
+			<label class="col-sm-2 control-label">service url</label>
+			<div class="col-sm-10">
+				<input value="api/default/albums" class="form-control" type="text" id="txtServiceUrl"/>
+				<p class="help-block">must not have slash before "api/default/albums" and not "/api/default/albums"</p>
 
+			</div>
 		</div>
-	</div>
-	<div class="form-group">
-		<label class="col-sm-2 control-label">username</label>
-		<div class="col-sm-10">
-			<input value="servicetest" class="form-control" type="text" id="txtUsername"/>
+		<div class="form-group">
+			<label class="col-sm-2 control-label">username</label>
+			<div class="col-sm-10">
+				<input value="servicetest" class="form-control" type="text" id="txtUsername"/>
+			</div>
 		</div>
-	</div>
-	<div class="form-group">
-		<label class="col-sm-2 control-label">password</label>
-		<div class="col-sm-10">
-			<input value="password" class="form-control" type="password" id="txtPassword"/>
+		<div class="form-group">
+			<label class="col-sm-2 control-label">password</label>
+			<div class="col-sm-10">
+				<input value="password" class="form-control" type="password" id="txtPassword"/>
+			</div>
 		</div>
-	</div>
 
+		<div>
+			<button type="submit" id="btnListData">List Data</button>
+		</div>
+	</form>
 	<div>
-		<button type="submit" id="btnListData">List Data</button>
+		<h3>Results</h3>
+		<textarea style="height: 500px; width: 75%;" id="txtResults"></textarea>
 	</div>
-</form>
-<div>
-	<h3>Results</h3>
-	<textarea style="width: 75%; height: 500px" id="txtResults"></textarea>
 </div>
-
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
 <script>
 	$(function() {
-		
+
 
 		var token;
 
@@ -71,10 +71,10 @@
 
 		}
 
-		window.onbeforeunload = function () {
+		window.onbeforeunload = function() {
 			signOut();
 			return "We will log you out of the api";
-		}
+		};
 
 		function parseToken(token) {
 			var keyValStrings = token.split('&');
@@ -124,7 +124,7 @@
 											contentType: 'application/json',
 											beforeSend: function(xhr) { xhr.setRequestHeader('Authorization', headerToken); }
 										})
-									.done(function (data) {
+									.done(function(data) {
 										var jsonData = JSON.stringify(data);
 										$('#txtResults').val(jsonData);
 									})
