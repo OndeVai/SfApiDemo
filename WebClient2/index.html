@@ -1,0 +1,146 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+	<title>SF API Demo</title>
+	<meta charset="utf-8"/>
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+</head>
+<body>
+
+<h1>SF API Demo</h1>
+
+<form style="width: 50%" class="form-horizontal">
+
+	<div class="form-group">
+		<label class="col-sm-2 control-label">url</label>
+		<div class="col-sm-10">
+			<input value="http://localhost:8080/" class="form-control" type="text" id="txtUrl"/>
+		</div>
+	</div>
+	<div class="form-group">
+		<label class="col-sm-2 control-label">service url</label>
+		<div class="col-sm-10">
+			<input value="api/default/albums" class="form-control" type="text" id="txtServiceUrl"/>
+		</div>
+	</div>
+	<div class="form-group">
+		<label class="col-sm-2 control-label">username</label>
+		<div class="col-sm-10">
+			<input value="servicetest" class="form-control" type="text" id="txtUsername"/>
+		</div>
+	</div>
+	<div class="form-group">
+		<label class="col-sm-2 control-label">password</label>
+		<div class="col-sm-10">
+			<input value="password" class="form-control" type="password" id="txtPassword"/>
+		</div>
+	</div>
+
+	<div>
+		<button type="submit" id="btnListData">List Data</button>
+	</div>
+</form>
+<div>
+	<h3>Results</h3>
+	<textarea style="width: 75%; height: 500px" id="txtResults"></textarea>
+</div>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+<script>
+	$(function() {
+		
+
+		var token;
+
+		function signOut() {
+
+			if (!token) {
+				var dfd = $.Deferred();
+				dfd.resolve();
+				return dfd.promise();
+			}
+
+			var baseUrl = $('#txtUrl').val();
+			var signoutUrl = '/api/localsignout?baseUrl=' + baseUrl + '&token=' + encodeURIComponent(token);
+
+			return $.ajax(signoutUrl);
+
+		}
+
+		window.onbeforeunload = function () {
+			signOut();
+			return "We will log you out of the api";
+		}
+
+		function parseToken(token) {
+			var keyValStrings = token.split('&');
+			var keyVals = {};
+			for (var i = 0; i < keyValStrings.length; i++) {
+				var keyVal = keyValStrings[i].split('=');
+				keyVals[keyVal[0]] = decodeURIComponent(keyVal[1]);
+
+			}
+
+			return keyVals;
+
+		}
+
+		$('form').on('submit',
+			function(e) {
+				e.preventDefault();
+
+				var baseUrl = $('#txtUrl').val();
+
+				//generate auth token
+
+				//--sign the user out first to avoid any unauthed errors
+				signOut().always(function() {
+
+					//--authenticate with the service and get a token back
+					//--we first have to determine the configured authentication method
+					var authUrl = baseUrl + "Sitefinity/Authenticate";
+					var username = $('#txtUsername').val();
+					var password = $('#txtPassword').val();
+
+					$.ajax(authUrl).done(function() {
+						var formData = 'wrap_name=' + username + '&wrap_password=' + password;
+						$.ajax(authUrl + '/SWT',
+								{
+									data: formData,
+									method: "POST"
+								})
+							.done(function(data) {
+								token = parseToken(data)['wrap_access_token'];
+								//call the service with the token to get the data
+								var serviceUrl = baseUrl + $('#txtServiceUrl').val();
+								var headerToken = 'WRAP access_token=\"' + token + '\"';
+								return $.ajax(serviceUrl,
+										{
+											method: 'GET',
+											contentType: 'application/json',
+											beforeSend: function(xhr) { xhr.setRequestHeader('Authorization', headerToken); }
+										})
+									.done(function (data) {
+										var jsonData = JSON.stringify(data);
+										$('#txtResults').val(jsonData);
+									})
+									.fail(function(data) {
+										alert('failed to call service ' + data);
+									});
+							})
+							.fail(function(data) {
+								alert('failed to authenticate ' + data);
+							});
+
+					});
+
+				});
+
+			});
+	});
+
+
+</script>
+</body>
+</html>
