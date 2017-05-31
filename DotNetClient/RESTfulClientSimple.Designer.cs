@@ -38,6 +38,9 @@
 			this.txtServiceUrl = new System.Windows.Forms.TextBox();
 			this.label10 = new System.Windows.Forms.Label();
 			this.txtResults = new System.Windows.Forms.TextBox();
+			this.label4 = new System.Windows.Forms.Label();
+			this.label5 = new System.Windows.Forms.Label();
+			this.label6 = new System.Windows.Forms.Label();
 			this.SuspendLayout();
 			// 
 			// btnListData
@@ -136,11 +139,42 @@
 			this.txtResults.Size = new System.Drawing.Size(1022, 493);
 			this.txtResults.TabIndex = 30;
 			// 
+			// label4
+			// 
+			this.label4.AutoSize = true;
+			this.label4.Location = new System.Drawing.Point(481, 22);
+			this.label4.Name = "label4";
+			this.label4.Size = new System.Drawing.Size(506, 17);
+			this.label4.TabIndex = 31;
+			this.label4.Text = "(must have trailing slash \"http://localhost:8080/\" and not \"http://localhost:8080" +
+    "\")";
+			// 
+			// label5
+			// 
+			this.label5.AutoSize = true;
+			this.label5.Location = new System.Drawing.Point(481, 50);
+			this.label5.Name = "label5";
+			this.label5.Size = new System.Drawing.Size(503, 17);
+			this.label5.TabIndex = 32;
+			this.label5.Text = "(must not have slash before \"api/default/albums\" and not \"/api/default/albums\")";
+			// 
+			// label6
+			// 
+			this.label6.AutoSize = true;
+			this.label6.Location = new System.Drawing.Point(12, 144);
+			this.label6.Name = "label6";
+			this.label6.Size = new System.Drawing.Size(55, 17);
+			this.label6.TabIndex = 33;
+			this.label6.Text = "Results";
+			// 
 			// RESTfulClientSimple
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
 			this.ClientSize = new System.Drawing.Size(1047, 678);
+			this.Controls.Add(this.label6);
+			this.Controls.Add(this.label5);
+			this.Controls.Add(this.label4);
 			this.Controls.Add(this.txtResults);
 			this.Controls.Add(this.label10);
 			this.Controls.Add(this.txtServiceUrl);
@@ -171,6 +205,9 @@
 		private System.Windows.Forms.TextBox txtServiceUrl;
 		private System.Windows.Forms.Label label10;
 		private System.Windows.Forms.TextBox txtResults;
+		private System.Windows.Forms.Label label4;
+		private System.Windows.Forms.Label label5;
+		private System.Windows.Forms.Label label6;
 	}
 }
 
